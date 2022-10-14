@@ -1,0 +1,15 @@
+.idea/
+__pycache__/
+.vscode/
+
+env/
+statics/
+
+.coverage
+htmlcov/
+
+.gitlab-ci.yml
+
+protos/
+!protos/*.proto
+!protos/__init__.py
