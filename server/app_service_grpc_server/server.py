@@ -46,6 +46,9 @@ class MainAppServicer(app_service_pb2_grpc.MainAppServicer):
 
     
     
-
+# network.bind_host
+# (Static, string) The network address(es) to which the node should bind in order to listen for incoming connections. Accepts a list of IP addresses, hostnames, and special values. Defaults to the address given by network.host. Use this setting only if binding to multiple addresses or using different addresses for publishing and binding.
+# network.publish_host
+# (Static, string) The network address that clients and other nodes can use to contact this node. Accepts an IP address, a hostname, or a special value. Defaults to the address given by network.host. Use this setting only if binding to multiple addresses or using different addresses for publishing and binding.
 
     

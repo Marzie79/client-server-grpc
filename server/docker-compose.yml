@@ -1,0 +1,51 @@
+version: '2.2'
+
+services:
+
+  elasticsearch:
+    image: elasticsearch:8.4.3
+    container_name: elasticsearch
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data:z
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      ELASTIC_USER: ${ELASTIC_USER:-}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      discovery.type: single-node
+      network.publish_host: 127.0.0.2
+    networks:
+      - elk
+
+  logstash:
+    image: logstash:8.4.3
+    volumes:
+      - /var/log/GDPR/myapplication:/var/log/GDPR/myapplication:ro,Z
+    ports:
+      - "5044:5044"
+      - "50000:50000/tcp"
+      - "50000:50000/udp"
+      - "9600:9600"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      LOGSTASH_INTERNAL_PASSWORD: ${ELASTIC_PASSWORD:-}
+      XPACK_MONITORING_ELASTICSEARCH_USERNAME: ${ELASTIC_USER:-}
+      XPACK_MONITORING_ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD:-}
+      ELASTICSEARCH_HOST: 127.0.0.2
+      ELASTICSEARCH_PORT: 9200
+      XPACK_MONITORING_ENABLED: "true"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch
+
+networks:
+  elk:
+    driver: bridge
+
+volumes:
+  elasticsearch:

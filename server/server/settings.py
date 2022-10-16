@@ -29,8 +29,9 @@ ALLOWED_HOSTS = []
 
 ELASTICSEARCH_DSL={
     'default': {
-     'hosts': 'localhost:9200'
-    },
+     'hosts': 'localhost:9200',
+     "http_auth":('elastic', 'changeme'),
+    }, 
 }
 
 # Application definition

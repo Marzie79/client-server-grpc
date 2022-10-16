@@ -4,6 +4,7 @@ __pycache__/
 
 env/
 statics/
+*.sqlite3
 
 .coverage
 htmlcov/
