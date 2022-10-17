@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 
 from django.http import HttpResponse
 
-from .documents import StuffDocument
+# from .documents import StuffDocument
 from .serializers import StuffSerializer
 
 
@@ -36,7 +36,7 @@ class PaginatedElasticSearchAPIView(APIView, LimitOffsetPagination):
 
 class SearchStuff(PaginatedElasticSearchAPIView):
     serializer_class = StuffSerializer
-    document_class = StuffDocument
+    # document_class = StuffDocument
 
     def generate_q_expression(self, query):
         return Q(
