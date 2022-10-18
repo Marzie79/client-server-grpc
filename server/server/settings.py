@@ -147,3 +147,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 1,
 }
+
+CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_RESULT_BACKEND = "rpc://"
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
