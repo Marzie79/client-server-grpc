@@ -129,3 +129,34 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_RESULT_BACKEND = "rpc://"
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+STREAM_INFO = {
+    'CLIENT_SERVICE_EXCHANGE': os.environ.get(
+        'CLIENT_SERVICE_EXCHANGE', 'client'
+    ),
+    'CLIENT_SERVICE_DEFAULT_ROUTING_KEY': os.environ.get(
+        'CLIENT_SERVICE_DEFAULT_ROUTING_KEY', 'client'
+    ),
+    'CLIENT_SERVICE_LOG_ROUTING_KEY': os.environ.get(
+        'CLIENT_SERVICE_LOG_ROUTING_KEY',
+        'client.log_routing'
+    ),
+    "CLIENT_SERVICE_EXCHANGE": os.environ.get(
+        "CLIENT_SERVICE_EXCHANGE", "client"
+    ),
+    'CLIENT_SERVICE_SEND_LOG_ROUTING_KEY': os.environ.get(
+        'CLIENT_SERVICE_SEND_LOG_ROUTING_KEY',
+        'client.client_routing'
+    ),
+    'CLIENT_SERVICE_SEND_LOG_QUEUE': os.environ.get(
+        'CLIENT_SERVICE_SEND_LOG_QUEUE',
+        'client.send_log_queue'
+    )
+}

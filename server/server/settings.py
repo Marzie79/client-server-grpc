@@ -154,3 +154,28 @@ CELERY_RESULT_BACKEND = "rpc://"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+
+STREAM_INFO = {
+    'SERVER_SERVICE_EXCHANGE': os.environ.get(
+        'SERVER_SERVICE_EXCHANGE', "server"
+    ),
+    'SERVER_SERVICE_DEFAULT_ROUTING_KEY': os.environ.get(
+        'SERVER_SERVICE_DEFAULT_ROUTING_KEY', 'server'
+    ),
+    'CLIENT_SERVICE_LOG_ROUTING_KEY': os.environ.get(
+        'CLIENT_SERVICE_LOG_ROUTING_KEY',
+        'client.log_routing'
+    ),
+    'CLIENT_SERVICE_EXCHANGE': os.environ.get(
+        'CLIENT_SERVICE_EXCHANGE', 'client.test'
+    ),
+    'CLIENT_SERVICE_SEND_LOG_ROUTING_KEY': os.environ.get(
+        'CLIENT_SERVICE_SEND_LOG_ROUTING_KEY',
+        'client.client_routing'
+    ),
+    'CLIENT_SERVICE_SEND_LOG_QUEUE': os.environ.get(
+        'CLIENT_SERVICE_SEND_LOG_QUEUE',
+        'client.send_log_queue'
+    )
+}
