@@ -23,6 +23,7 @@ services:
     image: logstash:8.4.3
     volumes:
       - /var/log/GDPR/myapplication:/var/log/GDPR/myapplication:ro,Z
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
     ports:
       - "5044:5044"
       - "50000:50000/tcp"
@@ -36,6 +37,8 @@ services:
       ELASTICSEARCH_HOST: ${ELASTIC_HOST:-}
       ELASTICSEARCH_PORT: 9200
       XPACK_MONITORING_ENABLED: "true"
+      spring.rabbitmq.host: "localhost"
+      spring.rabbitmq.port: 5672
     networks:
       - elk
     depends_on:
