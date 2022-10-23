@@ -2,8 +2,10 @@ from kombu import Queue, Exchange
 
 from django.conf import settings
 
+from utilities.singleton_meta import SingletonMeta
 
-class Queues:
+
+class Queues(metaclass=SingletonMeta):
     """This class is about add all related stream queues."""
 
     @staticmethod

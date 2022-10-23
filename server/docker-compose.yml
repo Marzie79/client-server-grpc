@@ -23,28 +23,44 @@ services:
     image: logstash:8.4.3
     volumes:
       - /var/log/GDPR/myapplication:/var/log/GDPR/myapplication:ro,Z
-      - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - ./logstash/pipeline/logstash.conf:/usr/share/logstash/config/logstash.conf
     ports:
       - "5044:5044"
       - "50000:50000/tcp"
       - "50000:50000/udp"
       - "9600:9600"
     environment:
-      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
       LOGSTASH_INTERNAL_PASSWORD: ${ELASTIC_PASSWORD:-}
-      XPACK_MONITORING_ELASTICSEARCH_USERNAME: ${ELASTIC_USER:-}
-      XPACK_MONITORING_ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD:-}
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
       ELASTICSEARCH_HOST: ${ELASTIC_HOST:-}
       ELASTICSEARCH_PORT: 9200
-      XPACK_MONITORING_ENABLED: "true"
-      spring.rabbitmq.host: "localhost"
-      spring.rabbitmq.port: 5672
+      XPACK_MONITORING_ELASTICSEARCH_USERNAME: ${ELASTIC_USER:-}
+      XPACK_MONITORING_ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD:-}
+      XPACK_MONITORING_ENABLED: "false"
+      # XPACK_MONITORING_RABBITMQ_HOST: "localhost"
+      # XPACK_MONITORING_RABBITMQ_ID: "rabbitmq_logs_1"
+      # XPACK_MONITORING_RABBITMQ_PORT: 5672
+      # XPACK_MONITORING_RABBITMQ_VHOST: "/"
+      # XPACK_MONITORING_RABBITMQ_PASSWORD: "teststst"\
     networks:
       - elk
     depends_on:
       - elasticsearch
+      - rabbitmq
     links:
       - elasticsearch
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq'
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/
+      - rabbitmq_log:/var/log/rabbitmq/
+    networks:
+        - elk
 
 networks:
   elk:
@@ -52,3 +68,5 @@ networks:
 
 volumes:
   elasticsearch:
+  rabbitmq_data:
+  rabbitmq_log:

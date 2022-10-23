@@ -3,6 +3,8 @@ from celery import Celery
 
 from django.conf import settings
 
+from utilities.stream.consumer.client_consumer import ClientConsumer
+
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.settings')
 
@@ -11,8 +13,10 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 app.conf.task_default_exchange = settings.STREAM_INFO.get(
-    'SERVER_SERVICE_EXCHANGE'
+    'CLIENT_SERVICE_EXCHANGE'
 )
 app.conf.task_default_routing_key = settings.STREAM_INFO.get(
-    'SERVER_SERVICE_DEFAULT_ROUTING_KEY'
+    'CLIENT_SERVICE_DEFAULT_ROUTING_KEY'
 )
+
+app.steps['consumer'].add(ClientConsumer)

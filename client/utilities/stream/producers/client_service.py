@@ -3,7 +3,7 @@ from kombu import Exchange, Queue
 
 from django.conf import settings
 
-from server.celery import app
+from client.celery import app
 
 
 class Client:
@@ -32,5 +32,5 @@ class Client:
             )
             print("here")
 
-from utilities.stream.producers.client_service import Client
-Client.send_log({"hello": "bye"})
+# from utilities.stream.producers.client_service import Client
+# Client.send_log({"hello": "bye"})

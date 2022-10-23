@@ -148,27 +148,26 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 1,
 }
 
-CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_BROKER_URL = 'amqp://127.0.0.2'
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_RESULT_BACKEND = "rpc://"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-
 STREAM_INFO = {
-    'SERVER_SERVICE_EXCHANGE': os.environ.get(
-        'SERVER_SERVICE_EXCHANGE', "server"
+    'CLIENT_SERVICE_EXCHANGE': os.environ.get(
+        'CLIENT_SERVICE_EXCHANGE', 'client'
     ),
-    'SERVER_SERVICE_DEFAULT_ROUTING_KEY': os.environ.get(
-        'SERVER_SERVICE_DEFAULT_ROUTING_KEY', 'server'
+    'CLIENT_SERVICE_DEFAULT_ROUTING_KEY': os.environ.get(
+        'CLIENT_SERVICE_DEFAULT_ROUTING_KEY', 'client'
     ),
     'CLIENT_SERVICE_LOG_ROUTING_KEY': os.environ.get(
         'CLIENT_SERVICE_LOG_ROUTING_KEY',
         'client.log_routing'
     ),
-    'CLIENT_SERVICE_EXCHANGE': os.environ.get(
-        'CLIENT_SERVICE_EXCHANGE', 'client.test'
+    "CLIENT_SERVICE_EXCHANGE": os.environ.get(
+        "CLIENT_SERVICE_EXCHANGE", "client"
     ),
     'CLIENT_SERVICE_SEND_LOG_ROUTING_KEY': os.environ.get(
         'CLIENT_SERVICE_SEND_LOG_ROUTING_KEY',
