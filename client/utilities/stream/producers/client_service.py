@@ -23,7 +23,7 @@ class Client:
         )
         with app.producer_or_acquire(None) as producer:
             producer.publish(
-                body=json.dumps(body),
+                body=body,
                 serializer='json',
                 exchange=queue_.exchange,
                 routing_key=queue_.routing_key,
@@ -32,5 +32,6 @@ class Client:
             )
             print("here")
 
+# import json
 # from utilities.stream.producers.client_service import Client
-# Client.send_log({"hello": "bye"})
+# Client.send_log(json.loads({"hello": "bye"}))

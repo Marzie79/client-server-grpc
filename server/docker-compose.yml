@@ -23,7 +23,7 @@ services:
     image: logstash:8.4.3
     volumes:
       - /var/log/GDPR/myapplication:/var/log/GDPR/myapplication:ro,Z
-      - ./logstash/pipeline/logstash.conf:/usr/share/logstash/config/logstash.conf
+      - ./logstash/pipeline/:/etc/logstash/
     ports:
       - "5044:5044"
       - "50000:50000/tcp"
@@ -32,11 +32,13 @@ services:
     environment:
       LOGSTASH_INTERNAL_PASSWORD: ${ELASTIC_PASSWORD:-}
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-      ELASTICSEARCH_HOST: ${ELASTIC_HOST:-}
       ELASTICSEARCH_PORT: 9200
       XPACK_MONITORING_ELASTICSEARCH_USERNAME: ${ELASTIC_USER:-}
       XPACK_MONITORING_ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD:-}
       XPACK_MONITORING_ENABLED: "false"
+      PATH_CONFIG: "/etc/logstash/*.conf"
+      ELASTICSEARCH_HOST: ${ELASTIC_HOST:-}
+      monitoring.elasticsearch.hosts: "http://elasticsearch:9200"
       # XPACK_MONITORING_RABBITMQ_HOST: "localhost"
       # XPACK_MONITORING_RABBITMQ_ID: "rabbitmq_logs_1"
       # XPACK_MONITORING_RABBITMQ_PORT: 5672
@@ -47,8 +49,6 @@ services:
     depends_on:
       - elasticsearch
       - rabbitmq
-    links:
-      - elasticsearch
 
   rabbitmq:
     image: rabbitmq:3-management
