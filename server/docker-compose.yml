@@ -15,6 +15,7 @@ services:
       ELASTIC_USER: ${ELASTIC_USER:-}
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
       NETWORK_PUBLISH_HOST: ${ELASTIC_HOST:-}
+      xpack.security.enrollment.enabled: 'true'
       discovery.type: single-node
     networks:
       - elk
@@ -29,9 +30,27 @@ services:
     environment:
       ES_JAVA_OPTS: -Xmx256m -Xms256m
       XPACK_MONITORING_ENABLED: 'false'
-      CONFIG_STRING: 'input { rabbitmq { id => "rabbitmq_logs_1" host => "rabbitmq" port => 5672 vhost => "/" password => "guest" user => "guest" queue => "client.send_log_queue" exchange => "client" key => "client.client_routing" exchange_type => "direct" type => "rabbitmq" durable => true codec => "json" } } filter { json { source => "message" } mutate { remove_field => ["@version", "type", "event", "@timestamp"] } } output { elasticsearch { hosts => "elasticsearch:9200" user => "elastic" password => "changeme" index => "%{segment}" action => "index" } }'
+      CONFIG_STRING: 'input { rabbitmq { host => "rabbitmq" port => 5672 vhost => "/" password => "guest" user => "guest" queue => "client.send_log_queue" exchange => "client" key => "client.client_routing" exchange_type => "direct" type => "rabbitmq" durable => true codec => "json" } } filter { json { source => "message" } mutate { remove_field => ["@version", "type", "event", "@timestamp"] } } output { elasticsearch { hosts => "elasticsearch:9200" user => "elastic" password => "changeme" index => "%{segment}" action => "index" } }'
     networks:
       - elk
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: kibana:8.4.3
+    container_name: kibana
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
+      # KIBANA_FLEET_SETUP: '1'
+      ELASTICSEARCH_USERNAME: "elastic"
+      ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD:-}
+      # elasticsearch.serviceAccountToken: "edited"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
 
   rabbitmq:
     image: rabbitmq:3-management
