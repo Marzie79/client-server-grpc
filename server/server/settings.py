@@ -148,7 +148,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 1,
 }
 
-CELERY_BROKER_URL = 'amqp://127.0.0.2'
+CELERY_BROKER_URL = 'amqp://username:password@127.0.0.2'
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_RESULT_BACKEND = "rpc://"
 CELERY_ACCEPT_CONTENT = ['application/json']

@@ -15,7 +15,6 @@ services:
       ELASTIC_USER: ${ELASTIC_USER:-}
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
       NETWORK_PUBLISH_HOST: ${ELASTIC_HOST:-}
-      xpack.security.enrollment.enabled: 'true'
       discovery.type: single-node
     networks:
       - elk
@@ -30,7 +29,7 @@ services:
     environment:
       ES_JAVA_OPTS: -Xmx256m -Xms256m
       XPACK_MONITORING_ENABLED: 'false'
-      CONFIG_STRING: 'input { rabbitmq { host => "rabbitmq" port => 5672 vhost => "/" password => "guest" user => "guest" queue => "client.send_log_queue" exchange => "client" key => "client.client_routing" exchange_type => "direct" type => "rabbitmq" durable => true codec => "json" } } filter { json { source => "message" } mutate { remove_field => ["@version", "type", "event", "@timestamp"] } } output { elasticsearch { hosts => "elasticsearch:9200" user => "elastic" password => "changeme" index => "%{segment}" action => "index" } }'
+      CONFIG_STRING: 'input { rabbitmq { host => "rabbitmq" port => 5672 vhost => "/" password => "password" user => "username" queue => "client.send_log_queue" exchange => "client" key => "client.client_routing" exchange_type => "direct" type => "rabbitmq" durable => true codec => "json" } } filter { json { source => "message" } mutate { remove_field => ["@version", "type", "event", "@timestamp"] } } output { elasticsearch { hosts => "elasticsearch:9200" user => "elastic" password => "test" index => "%{segment}" action => "index" } }'
     networks:
       - elk
     depends_on:
@@ -43,10 +42,11 @@ services:
       - 5601:5601
     environment:
       ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
-      # KIBANA_FLEET_SETUP: '1'
-      ELASTICSEARCH_USERNAME: "elastic"
-      ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD:-}
-      # elasticsearch.serviceAccountToken: "edited"
+      ELASTICSEARCH_USERNAME: "kibana_system"
+      ELASTICSEARCH_PASSWORD: "password"
+      XPACK_SECURITY_ENABLED: "true"
+      # INITIAL_PASSWORD: "password"
+      SERVER_NAME: 127.0.0.3
     networks:
       - elk
     depends_on:
@@ -55,9 +55,13 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
+    restart: always
     ports:
         - 5672:5672
         - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: "username"
+      RABBITMQ_DEFAULT_PASS: "password"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq/
       - rabbitmq_log:/var/log/rabbitmq/

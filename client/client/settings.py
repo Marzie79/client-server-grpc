@@ -130,7 +130,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CELERY_BROKER_URL = 'amqp://127.0.0.2'
+CELERY_BROKER_URL = 'amqp://username:password@127.0.0.2'
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_RESULT_BACKEND = "rpc://"
 CELERY_ACCEPT_CONTENT = ['application/json']
