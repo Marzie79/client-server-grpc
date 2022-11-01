@@ -3,10 +3,8 @@ version: '2.2'
 services:
 
   elasticsearch:
-    image: elasticsearch:8.4.3
+    image: elasticsearch:7.17.7
     container_name: elasticsearch
-    command: >
-      bash -c '/usr/share/elasticsearch/bin/elasticsearch-reset-password -u kibana_system -i changeme;'
     volumes:
       - elasticsearch:/usr/share/elasticsearch/data:z
     ports:
@@ -23,7 +21,7 @@ services:
       - elk
 
   logstash:
-    image: logstash:8.4.3
+    image: logstash:7.17.7
     container_name: logstash
     volumes:
       - /var/log/GDPR/myapplication:/var/log/GDPR/myapplication:ro,Z
@@ -32,24 +30,21 @@ services:
     environment:
       ES_JAVA_OPTS: -Xmx256m -Xms256m
       XPACK_MONITORING_ENABLED: 'false'
-      CONFIG_STRING: 'input { rabbitmq { host => "rabbitmq" port => 5672 vhost => "/" password => "password" user => "username" queue => "client.send_log_queue" exchange => "client" key => "client.client_routing" exchange_type => "direct" type => "rabbitmq" durable => true codec => "json" } } filter { json { source => "message" } mutate { remove_field => ["@version", "type", "event", "@timestamp"] } } output { elasticsearch { hosts => "elasticsearch:9200" user => "elastic" password => "changeme" index => "%{segment}" action => "index" } }'
+      CONFIG_STRING: 'input { rabbitmq { host => "rabbitmq" port => 5672 vhost => "/" password => "password" user => "username" queue => "client.send_log_queue" exchange => "client" key => "client.client_routing" exchange_type => "direct" type => "rabbitmq" durable => true codec => "json" } } filter { json { source => "message" } mutate { remove_field => ["@version", "type", "event", "@timestamp"] } } output { elasticsearch { hosts => "elasticsearch:9200" user => "elastic" password => "test" index => "%{segment}" action => "index" } }'
     networks:
       - elk
     depends_on:
       - elasticsearch
 
   kibana:
-    image: kibana:8.4.3
+    image: kibana:7.17.7
     container_name: kibana
     ports:
       - 5601:5601
     environment:
-      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
-      ELASTICSEARCH_USERNAME: "kibana_system"
-      ELASTICSEARCH_PASSWORD: "changeme"
-      SERVER_NAME: "127.0.0.3"
-      server.host: "0.0.0.0"
-
+      ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
+      ELASTICSEARCH_USERNAME: ${ELASTIC_USER:-}
+      ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD:-}
     networks:
       - elk
     depends_on:
