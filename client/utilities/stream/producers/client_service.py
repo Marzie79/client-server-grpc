@@ -29,11 +29,9 @@ class Client:
                 routing_key=queue_.routing_key,
                 declare=[queue_],
                 retry=True,
-                # userid="hello", 
-                # password="bye",
             )
             print("here")
 
-import json
-from utilities.stream.producers.client_service import Client
-Client.send_log({"hello": "bye"})
+# import json
+# from utilities.stream.producers.client_service import Client
+# Client.send_log({"hello": "bye"})

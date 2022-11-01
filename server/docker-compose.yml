@@ -19,7 +19,7 @@ services:
       discovery.type: single-node
     networks:
       - elk
-
+  
   logstash:
     image: logstash:7.17.7
     container_name: logstash
